@@ -92,7 +92,7 @@ self.startServer();
 }
 
 REST.prototype.startServer = function() {
-      app.listen(3000,function(){
+      app.listen(process.env.PORT || 3000,function(){
           console.log("All right ! I am alive at Port 8080.");
       });
 }
