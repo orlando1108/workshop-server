@@ -48,10 +48,10 @@ REST.prototype.connectMysql = function() {
     var self = this;
     var pool      =    mysql.createPool({
         connectionLimit : 100,
-        host     : 'bbqgq84xq-mysql.services.clever-cloud.com',
-        user     : 'uyiyi3ppu3ygjfe0',
-        password : 'xOB2HwbAefRcAmHzwsW',
-        database : 'bbqgq84xq',
+        host     : process.env.MYSQL_ADDON_HOST,
+    	database : process.env.MYSQL_ADDON_DB,
+    	user     : process.env.MYSQL_ADDON_USER,
+    	password : process.env.MYSQL_ADDON_PASSWORD,
         debug    :  false
     });
     /*pool.getConnection(function(err,connection){
