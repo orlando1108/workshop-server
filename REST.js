@@ -124,7 +124,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
         connection.query(query,function(err,rows){
             connection.release();
             if(err) {
-                res.json({"Error" : true, "Message" : "Error executing MySQL query"});
+                res.json({"Error" : true, "Message" : "Error executing MySQL query", "Detail": JSON.stringify(err)});
             } else {
                 res.json({"Error" : false, "Message" : "Success", "Produits" : rows});
             }
