@@ -49,10 +49,10 @@ REST.prototype.connectMysql = function() {
     var self = this;
     var pool      =    mysql.createPool({
         connectionLimit : 100,
-        host     : process.env.MYSQL_ADDON_HOST,
-    	database : process.env.MYSQL_ADDON_DB,
-    	user     : process.env.MYSQL_ADDON_USER,
-    	password : process.env.MYSQL_ADDON_PASSWORD,
+        host     : process.env.MYSQL_ADDON_HOST || 	'bz400wnal-mysql.services.clever-cloud.com',
+    	database : process.env.MYSQL_ADDON_DB || 'bz400wnal',
+    	user     : process.env.MYSQL_ADDON_USER || 'urcopkascy7ls1pc',
+    	password : process.env.MYSQL_ADDON_PASSWORD || 'MCD3wSs7OrcRdXtaiTw',
         debug    :  false
     });
     /*pool.getConnection(function(err,connection){
@@ -66,13 +66,15 @@ REST.prototype.connectMysql = function() {
 }
 
 REST.prototype.configureExpress = function(connection) {
+	
+	  app.options('*', cors());
       var self = this;
       app.use(bodyParser.urlencoded({ extended: true }));
       app.use(bodyParser.json());
       var router = express.Router();
       app.use('/api', router);
       var rest_router = new rest(router,connection,md5);
-	  app.use(cors());
+	  //app.use(cors());
       
       app.use(function (req, res, next) {
           // Website you wish to allow to connect
