@@ -1,5 +1,7 @@
 var mysql = require("mysql");
-var cors = require('cors');
+var cors = require('cors')
+ 
+
 
 var insertedCommande_ID;
 
@@ -8,20 +10,8 @@ function REST_ROUTER(router,connection,md5) {
     self.handleRoutes(router,connection,md5);
 }
 REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
-    
+    router.options('*', cors())
     router.post("/commande",function(req,res){
-
-        
-
-     /*   connection.query( 'SELECT * FROM some_table', ( err, rows ) => {
-            connection.query( 'SELECT * FROM other_table', ( err, rows2 ) => {
-              connection.close( err => {
-                // ... do something with all the results
-              }
-            }
-          }
-
-*/
         var query = "INSERT INTO ??(??) VALUES (?)";
         var table = ["Commande","id_user",req.body.id_user]; //md5(req.body.password)
         
@@ -101,7 +91,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
 
     });
 */
-    router.get("/collections",cors(),function(req,res){
+    router.get("/collections",function(req,res){
         var query = "SELECT * FROM ??";
         var table = ["Collection"];
         query = mysql.format(query,table);
