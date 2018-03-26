@@ -1,4 +1,5 @@
 var mysql = require("mysql");
+var cors = require('cors');
 
 var insertedCommande_ID;
 
@@ -100,7 +101,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
 
     });
 */
-    router.get("/collections",function(req,res){
+    router.get("/collections",cors(),function(req,res){
         var query = "SELECT * FROM ??";
         var table = ["Collection"];
         query = mysql.format(query,table);

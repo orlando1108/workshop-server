@@ -39,6 +39,7 @@ var md5 = require('MD5');
 var rest = require("./REST.js");
 var cors = require('cors');
 var app  = express();
+var server = require('http').Server(app);
 
 function REST(){
     var self = this;
@@ -67,7 +68,7 @@ REST.prototype.connectMysql = function() {
 
 REST.prototype.configureExpress = function(connection) {
 	
-	  app.options('*', cors());
+	  //app.options('*', cors());
       var self = this;
       app.use(bodyParser.urlencoded({ extended: true }));
       app.use(bodyParser.json());
@@ -96,7 +97,7 @@ self.startServer();
 }
 
 REST.prototype.startServer = function() {
-      app.listen(process.env.PORT || 3000,function(){
+      server.listen(process.env.PORT || 3000,function(){
           console.log("All right ! I am alive at Port 8080.");
       });
 }
