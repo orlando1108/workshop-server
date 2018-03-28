@@ -162,7 +162,7 @@ var transporter = nodemailer.createTransport({
 
 router.post("/email",function(req,res){
 
-    console.log('  bodyyy   ' + JSON.stringify(req.body));
+    console.log('  body   ' + JSON.stringify(req.body));
  var context = {
      listProducts: req.body.listProducts,
      listCollections: req.body.listCollections,
