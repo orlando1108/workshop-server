@@ -95,7 +95,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
     });
 
     router.get("/collections",function(req,res){
-		res.writeHead(200, {'Content-Type': 'text/plain'});
+		
        // contents = fs.readFileSync('sliderImages.json', 'utf8');
         var query = "SELECT * FROM ??";
         var table = ["Collection"];
@@ -106,6 +106,7 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
             if(err) {
                 res.json({"Error" : true, "Message" : "Error executing MySQL query",  "Detail": JSON.stringify(err)});
             } else {
+				//res.writeHead(200, {'Content-Type': 'text/plain'});
                 res.json({"Error" : false, "Message" : "Success", "Collections" : rows});
             }
         });

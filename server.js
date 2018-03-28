@@ -60,9 +60,9 @@ REST.prototype.configureExpress = function(connection) {
 		  /*res.header("Access-Control-Allow-Origin", "*");
           res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");*/
           // Pass to next layer of middleware
-		  res.writeHead(200, headers);
+		  //res.writeHead(200, headers);
           next();
-          res.end();
+          //res.end();
     
       
 });
