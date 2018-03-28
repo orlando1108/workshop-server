@@ -1,7 +1,11 @@
-var mysql = require("mysql");
+var mysql = require('mysql');
 
 var insertedCommande_ID;
 var insertedUser_ID;
+var nodemailer = require('nodemailer');
+var fs = require('fs');
+var HBS = require('hbs');
+var Handlebars = require('handlebars');
 
 function REST_ROUTER(router,connection,md5) {
     var self = this;
@@ -91,6 +95,8 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
     });
 
     router.get("/collections",function(req,res){
+		res.writeHead(200, {'Content-Type': 'text/plain'});
+       // contents = fs.readFileSync('sliderImages.json', 'utf8');
         var query = "SELECT * FROM ??";
         var table = ["Collection"];
         query = mysql.format(query,table);
@@ -134,6 +140,60 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
             }
         });
     });
+	
+    // EMAIL API
+    
+    //get file and compile
+    var template  = fs.readFileSync('./views/email.hbs', 'utf-8');
+    var compiledTemplate = Handlebars.compile(template);
+	
+	/**
+ * Nodemailer configuration
+ */
+var transporter = nodemailer.createTransport({
+	host: "smtp-mail.outlook.com",
+	port: 587,
+	auth: {
+		user: "erwan.raulo2015@campus-eni.fr",
+		pass: "Batteur110891"
+	}
+});
+
+router.post("/email",function(req,res){
+
+    console.log('  bodyyy   ' +req.body);
+ /*var context2 = {
+     listProducts: req.body.listProducts,
+     listCollections: req.body.listCollections,
+     name: req.body.name
+ }*/
+	//let newfaq = req.body; // je recupere les données en post
+var context = {
+    listProducts:['WHITE SOAP','BLACK SOAP','LIQUID WHITE SOAP'],
+    firstname: 'Erwan Raulo'
+}
+	
+				// send mail with defined transport object
+				transporter.sendMail({
+                    from: '<erwan.raulo2015@campus-eni.fr>', // sender address
+					to: 'sampoultier@.com', // list of receivers
+					subject: 'Hello ! ', // Subject line
+					text: 'Hello world ?', // plain text body
+                    html: compiledTemplate(context) // html body
+                }, (error, info) => {
+					if (error) {
+						return console.log(error);
+					}
+					res.json({"Error" : false, "Message" : "Email sent !"});
+					console.log('Message %s sent: %s', info.messageId, info.response);
+				});
+});
+
+router.get('/preview', function(req, res){
+    res.render('email', {firstname: 'Erwan'})
+});
+				
+				
 
   /*  router.put("/users",function(req,res){
         var query = "UPDATE ?? SET ?? = ? WHERE ?? = ?";

@@ -1,36 +1,4 @@
 
-/*var mysql = require('mysql');
-var db;
-function connection() {
-  if (!db) {
-    db = mysql.createConnection({
-      host: "127.0.0.1",
-      port: "3306",
-      user: "alvin",
-      password: "starwars17",
-      database: "starwars"
-    });
-    db.connect(function (err) {
-      if (!err) {
-        console.log('Database is connected!');
-      } else {
-        console.log('Error connecting database!' + err);
-      }
-    });
-    db.on('error', function (err) {
-      console.log('db error', err);
-      if (err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
-        db = null;
-        connection()                         // lost due to either server restart, or a
-      } else {                                      // connnection idle timeout (the wait_timeout
-        throw err;                                  // server variable configures this)
-      }
-    });
-  }
-  return db;
-}
-module.exports = connection();
-*/
 
 var express = require("express");
 var mysql   = require("mysql");
@@ -40,6 +8,10 @@ var rest = require("./REST.js");
 var cors = require('cors');
 var app  = express();
 var server = require('http').Server(app);
+var hbs = require('hbs');
+var handlebars = require('handlebars');
+//var fs = require('fs');
+
 
 function REST(){
     var self = this;
@@ -51,18 +23,11 @@ REST.prototype.connectMysql = function() {
     var pool      =    mysql.createPool({
         connectionLimit : 100,
         host     : process.env.MYSQL_ADDON_HOST || 	'bz400wnal-mysql.services.clever-cloud.com',
-    	database : process.env.MYSQL_ADDON_DB || 'bz400wnal',
-    	user     : process.env.MYSQL_ADDON_USER || 'urcopkascy7ls1pc',
-    	password : process.env.MYSQL_ADDON_PASSWORD || 'MCD3wSs7OrcRdXtaiTw',
+    	  database : process.env.MYSQL_ADDON_DB || 'bz400wnal',
+    	  user     : process.env.MYSQL_ADDON_USER || 'urcopkascy7ls1pc',
+    	  password : process.env.MYSQL_ADDON_PASSWORD || 'MCD3wSs7OrcRdXtaiTw',
         debug    :  false
     });
-    /*pool.getConnection(function(err,connection){
-        if(err) {
-          self.stop(err);
-        } else {
-          self.configureExpress(connection);
-        }
-    });*/
     self.configureExpress(pool);
 }
 
@@ -75,7 +40,10 @@ REST.prototype.configureExpress = function(connection) {
       var router = express.Router();
       app.use('/api', router);
       var rest_router = new rest(router,connection,md5);
-	  //app.use(cors());
+      app.use(cors());
+    //app.set('view engine', 'hbs');
+	  app.set('view engine', 'hbs');
+	  //app.use(express.static(path.join(__dirname, '../')));
       
       app.use(function (req, res, next) {
           // Website you wish to allow to connect
