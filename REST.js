@@ -163,21 +163,21 @@ var transporter = nodemailer.createTransport({
 router.post("/email",function(req,res){
 
     console.log('  bodyyy   ' +req.body);
- /*var context2 = {
+ var context = {
      listProducts: req.body.listProducts,
      listCollections: req.body.listCollections,
-     name: req.body.name
- }*/
+     firstName: req.body.firstName
+ }
 	//let newfaq = req.body; // je recupere les données en post
-var context = {
+/*var context = {
     listProducts:['WHITE SOAP','BLACK SOAP','LIQUID WHITE SOAP'],
     firstname: 'Erwan Raulo'
-}
+}*/
 	
 				// send mail with defined transport object
 				transporter.sendMail({
                     from: '<erwan.raulo2015@campus-eni.fr>', // sender address
-					to: 'sampoultier@.com', // list of receivers
+					to: req.body.email, // list of receivers
 					subject: 'Hello ! ', // Subject line
 					text: 'Hello world ?', // plain text body
                     html: compiledTemplate(context) // html body
