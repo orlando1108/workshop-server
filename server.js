@@ -44,6 +44,7 @@ REST.prototype.configureExpress = function(connection) {
     //app.set('view engine', 'hbs');
 	  app.set('view engine', 'hbs');
 	  //app.use(express.static(path.join(__dirname, '../')));
+
       
       app.use(function (req, res, next) {
           // Website you wish to allow to connect
@@ -55,9 +56,13 @@ REST.prototype.configureExpress = function(connection) {
           // Set to true if you need the website to include cookies in the requests sent
           // to the API (e.g. in case you use sessions)
           res.setHeader('Access-Control-Allow-Credentials', true);
+		  
+		  /*res.header("Access-Control-Allow-Origin", "*");
+          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");*/
           // Pass to next layer of middleware
+		  res.writeHead(200, headers);
           next();
-        
+          res.end();
     
       
 });
