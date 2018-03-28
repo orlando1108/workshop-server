@@ -162,18 +162,14 @@ var transporter = nodemailer.createTransport({
 
 router.post("/email",function(req,res){
 
-    console.log('  bodyyy   ' +req.body);
+    console.log('  bodyyy   ' + JSON.stringify(req.body));
  var context = {
      listProducts: req.body.listProducts,
      listCollections: req.body.listCollections,
      firstName: req.body.firstName
  }
-	//let newfaq = req.body; // je recupere les données en post
-/*var context = {
-    listProducts:['WHITE SOAP','BLACK SOAP','LIQUID WHITE SOAP'],
-    firstname: 'Erwan Raulo'
-}*/
-	
+ console.log(context.listCollections)
+ console.log(context.listProducts)
 				// send mail with defined transport object
 				transporter.sendMail({
                     from: '<erwan.raulo2015@campus-eni.fr>', // sender address
@@ -186,7 +182,6 @@ router.post("/email",function(req,res){
 						return console.log(error);
 					}
 					res.json({"Error" : false, "Message" : "Email sent !"});
-					console.log('Message %s sent: %s', info.messageId, info.response);
 				});
 });
 
