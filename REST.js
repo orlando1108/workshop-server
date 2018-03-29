@@ -7,6 +7,7 @@ var fs = require('fs');
 var HBS = require('hbs');
 var Handlebars = require('handlebars');
 
+
 function REST_ROUTER(router,connection,md5) {
     var self = this;
     self.handleRoutes(router,connection,md5);
@@ -18,15 +19,17 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
 		  //USER
 		var msg_collections;
         var msg_produits;
+		var msg_user;
+		var error = false;
         var query = "INSERT INTO ??(??,??) VALUES (?,?)";
         var table = ["User","nom","email",req.body.name, req.body.email]; //md5(req.body.password)
         query = mysql.format(query,table);
         connection.query(query,function(err,rows){
             if(err) {
-                error = "an error has occurred, please inform the reseller !";
+                error = true;
             } else {
 				insertedUser_ID = rows.insertId;
-                msg_users = " user added ";
+                msg_user = " user added ";
 				console.log("inserted id user  " + insertedUser_ID);
             }
 			
@@ -35,39 +38,40 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
         query = mysql.format(query,table);
         connection.query(query,function(err,rows){
             if(err) {
-                error = "an error has occurred, please inform the reseller !";
+                error = true;
             } else {
                 insertedCommande_ID = rows.insertId;
                 console.log("inserted id commande  " + insertedCommande_ID);
             }
         
-            if(req.body.list_produits){
-                for (i = 0; i < req.body.list_produits.length; i++) { 
-                    console.log("id PRODUIT before  " + req.body.list_produits[i]);
+            if(req.body.listProducts){
+                for (i = 0; i < req.body.listProducts.length; i++) { 
+                   // console.log("id PRODUIT before  " + req.body.listProducts[i]);
                     table = ["Produit_Commande","id_produit","id_commande",Number(req.body.list_produits[i]),insertedCommande_ID ]; //md5(req.body.password)
                     console.log("id PRODUIT after  " + table);
                     query = "INSERT INTO ??(??,??) VALUES (?,?)";
                     query = mysql.format(query,table);
                     connection.query(query,function(err,rows){
                     if(err) {
-                        error = "an error has occurred, please inform the reseller !";
+                        error = true;
                     }
                 });
                 }
                 msg_produits = " products added ";
     
             }
-            if(req.body.list_collections){
-                console.log("list collections exists");
-               for (i = 0; i < req.body.list_collections.length; i++) { 
+            if(req.body.listCollections){
+                //console.log("list collections exists");
+               for (i = 0; i < req.body.listCollections.length; i++) { 
                     table = ["Collection_Commande","id_collection","id_commande",Number(req.body.list_collections[i]),insertedCommande_ID ]; //md5(req.body.password)
                     query = "INSERT INTO ??(??,??) VALUES (?,?)";
                     query = mysql.format(query,table);
                     connection.query(query,function(err,rows){
                     if(err) {
-                        error = "an error has occurred, please inform the reseller !";
+                        error = true;
                     } else {
                         msg_collections = " collections added ";
+						
                     }
                    });
                }
@@ -76,7 +80,12 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
         });
 		
 		});
-        res.json({"Error" : false, "msg_collections" : msg_collections, "msg_produits" : msg_produits });
+		if(error === true){
+			res.json({"Error" : "an error has occurred, please inform the reseller !"});
+		}else{
+			res.json({"Error" : "none", "msg_collections" : msg_collections, "msg_produits" : msg_produits, "msg_user" : msg_user });
+		}
+        
 
     });
 
@@ -144,7 +153,11 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
 	
     // EMAIL API
     
-    //get file and compile
+   
+
+router.post("/email",function(req,res){
+	
+	 //get file and compile
     var template  = fs.readFileSync('./views/email.hbs', 'utf-8');
     var compiledTemplate = Handlebars.compile(template);
 	
@@ -160,13 +173,11 @@ var transporter = nodemailer.createTransport({
 	}
 });
 
-router.post("/email",function(req,res){
-
-    console.log('  body   ' + JSON.stringify(req.body));
+    //console.log('  body   ' + JSON.stringify(req.body));
  var context = {
      listProducts: req.body.listProducts,
      listCollections: req.body.listCollections,
-     firstName: req.body.firstName
+     firstName: req.body.name
  }
  console.log(context.listCollections)
  console.log(context.listProducts)
