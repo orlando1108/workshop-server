@@ -154,16 +154,12 @@ REST_ROUTER.prototype.handleRoutes= function(router,connection,md5) {
     // EMAIL API
     
    
-
+/*
 router.post("/email",function(req,res){
 	
-	 //get file and compile
-    var template  = fs.readFileSync('./views/email.hbs', 'utf-8');
+    var template  = fs.readFileSync('./views/emailTest.hbs', 'utf-8');
     var compiledTemplate = Handlebars.compile(template);
 	
-	/**
- * Nodemailer configuration
- */
 var transporter = nodemailer.createTransport({
 	host: "smtp-mail.outlook.com",
 	port: 587,
@@ -173,7 +169,6 @@ var transporter = nodemailer.createTransport({
 	}
 });
 
-    //console.log('  body   ' + JSON.stringify(req.body));
  var context = {
      listProducts: req.body.listProducts,
      listCollections: req.body.listCollections,
@@ -185,8 +180,8 @@ var transporter = nodemailer.createTransport({
 				transporter.sendMail({
                     from: '<erwan.raulo2015@campus-eni.fr>', // sender address
 					to: req.body.email, // list of receivers
-					subject: 'Hello ! ', // Subject line
-					text: 'Hello world ?', // plain text body
+					subject: 'Melbourne B2B event: your order ! ', // Subject line
+					text: 'your order', // plain text body
                     html: compiledTemplate(context) // html body
                 }, (error, info) => {
 					if (error) {
